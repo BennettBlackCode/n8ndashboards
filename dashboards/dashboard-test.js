@@ -1,4 +1,4 @@
-// dashboard.js
+
 
 document.addEventListener('DOMContentLoaded', function() {
   // Create container
