@@ -1,17 +1,11 @@
-<!-- viewer.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Dashboard Viewer</title>
-</head>
-<body>
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const file = urlParams.get('file') || 'dashboard-test';
-    const script = document.createElement('script');
-    script.src = `dashboards/${file}.js`;
-    document.body.appendChild(script);
-  </script>
-</body>
-</html>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const file = urlParams.get('file') || 'dashboard-test';
+
+  const script = document.createElement('script');
+  script.src = `dashboards/${file}.js`;
+  script.type = 'text/javascript';
+  script.onload = () => console.log('✅ Dashboard script loaded!');
+  script.onerror = () => console.error('❌ Failed to load dashboard JS.');
+  document.body.appendChild(script);
+</script>
