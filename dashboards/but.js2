@@ -1,0 +1,652 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off-White Fashion Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #000;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .logo span {
+            color: #666;
+            font-style: italic;
+            text-decoration: line-through;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        .sidebar {
+            background-color: #000;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            height: calc(100vh - 140px);
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 30px;
+        }
+        .sidebar-menu li {
+            margin-bottom: 20px;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            transition: 0.3s;
+            padding: 10px;
+        }
+        .sidebar-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid #ff3300;
+        }
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        .active {
+            border-left: 3px solid #ff3300;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .main-content {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .stat-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
+        .stat-box:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        .stat-box h3 {
+            font-size: 14px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .stat-box p {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .stat-box .trend {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .trend.up {
+            color: #00c853;
+        }
+        .trend.down {
+            color: #ff3d00;
+        }
+        .trend i {
+            margin-right: 5px;
+        }
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .chart-box {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        .chart-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chart-title h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .chart-title .period {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        .period span {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .period span.active {
+            background-color: #000;
+            color: white;
+        }
+        .chart {
+            height: 300px;
+            position: relative;
+        }
+        .sales-chart-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .sales-line {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to right, 
+                transparent 10%, #ff3300 10%, #ff3300 15%, 
+                transparent 15%, transparent 25%, #ff3300 25%, 
+                #ff3300 35%, transparent 35%, transparent 45%, 
+                #ff3300 45%, #ff3300 55%, transparent 55%, 
+                transparent 65%, #ff3300 65%, #ff3300 75%, 
+                transparent 75%, transparent 85%, #ff3300 85%, #ff3300 95%);
+            clip-path: polygon(
+                0 100%, 10% 60%, 20% 70%, 30% 50%, 40% 65%, 50% 40%, 
+                60% 55%, 70% 35%, 80% 50%, 90% 30%, 100% 45%, 100% 100%
+            );
+        }
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #000 0% 45%,
+                #ff3300 45% 65%,
+                #777 65% 80%,
+                #ddd 80% 100%
+            );
+            margin: 20px auto;
+        }
+        .pie-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+        .color-1 {
+            background-color: #000;
+        }
+        .color-2 {
+            background-color: #ff3300;
+        }
+        .color-3 {
+            background-color: #777;
+        }
+        .color-4 {
+            background-color: #ddd;
+        }
+        .products-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .products-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .search-bar {
+            display: flex;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 250px;
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+        .search-bar i {
+            color: #666;
+            align-self: center;
+            margin-right: 10px;
+        }
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .products-table th {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #777;
+            letter-spacing: 1px;
+        }
+        .products-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+        .product-info img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 3px;
+        }
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .product-category {
+            font-size: 12px;
+            color: #777;
+        }
+        .status {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .in-stock {
+            background-color: rgba(0, 200, 83, 0.1);
+            color: #00c853;
+        }
+        .low-stock {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+        .out-stock {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        .price {
+            font-weight: 600;
+        }
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+        .action-btns button {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .action-btns button:hover {
+            background-color: #f5f5f5;
+        }
+        .edit-btn {
+            color: #2196f3;
+        }
+        .delete-btn {
+            color: #f44336;
+        }
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background: none;
+            border: 1px solid #ddd;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .pagination span {
+            margin: 0 10px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Off-<span>White</span></div>
+            <div class="user-info">
+                <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Admin">
+                <div>
+                    <h4>Admin</h4>
+                    <small>Fashion Director</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>DASHBOARD</h3>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><i class="fas fa-chart-line"></i> Overview</a></li>
+                    <li><a href="#"><i class="fas fa-tshirt"></i> Products</a></li>
+                    <li><a href="#"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Customers</a></li>
+                    <li><a href="#"><i class="fas fa-truck"></i> Shipments</a></li>
+                    <li><a href="#"><i class="fas fa-tags"></i> Promotions</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Total Revenue</h3>
+                        <p>$2,547,890</p>
+                        <div class="trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12.5% vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Orders</h3>
+                        <p>15,237</p>
+                        <div class="trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8.3% vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Avg. Order Value</h3>
+                        <p>$657</p>
+                        <div class="trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>4.2% vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Conversion Rate</h3>
+                        <p>3.2%</p>
+                        <div class="trend down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>0.8% vs last month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <div class="chart-title">
+                            <h3>Sales Trend</h3>
+                            <div class="period">
+                                <span>Day</span>
+                                <span>Week</span>
+                                <span class="active">Month</span>
+                                <span>Year</span>
+                            </div>
+                        </div>
+                        <div class="chart">
+                            <div class="sales-chart-container">
+                                <div class="sales-line"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Jan</span>
+                                <span>Feb</span>
+                                <span>Mar</span>
+                                <span>Apr</span>
+                                <span>May</span>
+                                <span>Jun</span>
+                                <span>Jul</span>
+                                <span>Aug</span>
+                                <span>Sep</span>
+                                <span>Oct</span>
+                                <span>Nov</span>
+                                <span>Dec</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-box">
+                        <div class="chart-title">
+                            <h3>Sales By Category</h3>
+                        </div>
+                        <div class="pie-chart"></div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <div class="legend-color color-1"></div>
+                                <span>Apparel (45%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color color-2"></div>
+                                <span>Footwear (20%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color color-3"></div>
+                                <span>Accessories (15%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color color-4"></div>
+                                <span>Others (20%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="products-container">
+                    <div class="products-header">
+                        <h3>Top Selling Products</h3>
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search products...">
+                        </div>
+                    </div>
+                    
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Sales</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="https://via.placeholder.com/50x50" alt="Off-White Diagonal Tee">
+                                        <div>
+                                            <div class="product-name">Diagonal Arrows T-Shirt</div>
+                                            <div class="product-category">Apparel</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price">$290</td>
+                                <td>1,245 units</td>
+                                <td><span class="status in-stock">In Stock</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="https://via.placeholder.com/50x50" alt="Industrial Belt">
+                                        <div>
+                                            <div class="product-name">Industrial Belt</div>
+                                            <div class="product-category">Accessories</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price">$210</td>
+                                <td>987 units</td>
+                                <td><span class="status in-stock">In Stock</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="https://via.placeholder.com/50x50" alt="Air Presto">
+                                        <div>
+                                            <div class="product-name">Nike x Off-White Air Presto</div>
+                                            <div class="product-category">Footwear</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price">$650</td>
+                                <td>754 units</td>
+                                <td><span class="status low-stock">Low Stock</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="https://via.placeholder.com/50x50" alt="Hoodie">
+                                        <div>
+                                            <div class="product-name">Diagonal Arrows Hoodie</div>
+                                            <div class="product-category">Apparel</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price">$450</td>
+                                <td>685 units</td>
+                                <td><span class="status in-stock">In Stock</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="https://via.placeholder.com/50x50" alt="Jordan 1">
+                                        <div>
+                                            <div class="product-name">Air Jordan 1 Retro High</div>
+                                            <div class="product-category">Footwear</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="price">$1,250</td>
+                                <td>452 units</td>
+                                <td><span class="status out-stock">Out of Stock</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="pagination">
+                        <button><i class="fas fa-chevron-left"></i></button>
+                        <span>Page 1 of 5</span>
+                        <button><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+```
