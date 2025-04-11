@@ -1,11 +1,22 @@
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const file = urlParams.get('file') || 'dashboard-test';
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Viewer</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const file = urlParams.get('file') || 'dashboard-test';
 
-  const script = document.createElement('script');
-  script.src = `dashboards/${file}.js`;
-  script.type = 'text/javascript';
-  script.onload = () => console.log('✅ Dashboard script loaded!');
-  script.onerror = () => console.error('❌ Failed to load dashboard JS.');
-  document.body.appendChild(script);
-</script>
+      const script = document.createElement('script');
+      script.src = `dashboards/${file}.js`;
+      script.type = 'text/javascript';
+      script.onload = () => console.log('✅ Dashboard script loaded!');
+      script.onerror = () => console.error('❌ Failed to load dashboard JS.');
+      document.body.appendChild(script);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
